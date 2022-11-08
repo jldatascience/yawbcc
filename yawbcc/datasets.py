@@ -1,10 +1,12 @@
 import pandas as pd
+import tensorflow as tf
 import requests
 from PIL import Image
 from zipfile import ZipFile
 from pathlib import Path
 from io import BytesIO
-from glob import glob
+from .images import central_pad_and_crop
+
 
 DATA_ROOT_DIR = Path.home() / 'yawbcc_data'
 
@@ -54,18 +56,49 @@ def load_barcelona_wbc() -> pd.DataFrame:
 
     data = []
     # Extract simple informations from dataset
-    for filename in glob(str(DATA_DIR / '**/*.jpg')):
-        file = Path(filename)
+    for file in DATA_DIR.glob('**/*.jpg'):
         img = Image.open(file)
         d = {'image': file.name,
              'group': file.parent.name.upper(),
              'label': file.stem.split('_')[0].upper(),
              'width': img.size[0],
              'height': img.size[1],
-             'path': filename}
+             'path': str(file)}
         data.append(d)
 
     # Create dataframe then post-process some columns
     df = pd.DataFrame(data)
     return df
+
+
+class WBCDataSequence(tf.keras.utils.Sequence):
+    """
+    Check documentation here: https://www.tensorflow.org/api_docs/python/tf/keras/utils/Sequence
+    """
+
+    def __init__(self, image_set, label_set, batch_size=32, image_size=(128, 128)):
+        self.image_set = np.array(image_set)
+        self.label_set = np.array(label_set)
+        self.batch_size = batch_size
+        self.image_size = image_size
+
+    def __get_image(self, image):
+        image = tf.keras.preprocessing.image.load_img(image, color_mode='rgb')
+        image_arr = tf.keras.preprocessing.image.img_to_array(image)
+        image_arr = central_pad_and_crop(image_arr, self.image_size)
+        return image_arr
+
+    def __get_data(self, images, labels):
+        image_batch = np.asarray([self.__get_image(img) for img in images])
+        label_batch = np.asarray(labels)
+        return image_batch, label_batch
+
+    def __getitem__(self, index):
+        images = self.image_set[index * self.batch_size:(index + 1) * self.batch_size]
+        labels = self.label_set[index * self.batch_size:(index + 1) * self.batch_size]
+        images, labels = self.__get_data(images, labels)
+        return images, labels
+
+    def __len__(self):
+        return len(self.image_set) // self.batch_size + (len(self.image_set) % self.batch_size > 0)
 
