@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import tensorflow as tf
 import requests
 from PIL import Image

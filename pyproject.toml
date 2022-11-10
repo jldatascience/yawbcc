@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "yawbcc"
-version = "0.1.1"
+version = "0.1.2"
 description = "Yet Another White Blood Cells Classifier"
 authors = [
     "Anastasiya Trushko <anastasia.trushko@gmail.com>",
