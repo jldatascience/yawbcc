@@ -12,6 +12,33 @@ from .images import central_pad_and_crop
 DATA_ROOT_DIR = Path.home() / 'yawbcc_data'
 
 
+def load_wbc_dataset(dataset: str) -> pd.DataFrame:
+    """Load WBC dataset.
+
+    Returns:
+        A dataframe with some metadata.
+
+    .. _List of available datasets (or direct download):
+       https://cloud.minesparis.psl.eu/index.php/s/hKwfHczrQYcLx0J
+    """
+    DATA_DIR = DATA_ROOT_DIR / dataset
+    BASE_URL = 'https://cloud.minesparis.psl.eu/index.php/s/hKwfHczrQYcLx0J'
+
+    if not DATA_ROOT_DIR.exists():
+        DATA_ROOT_DIR.mkdir(parents=True, exist_ok=True)
+
+    # Download dataset
+    if not (DATA_DIR / 'dataset.csv').exists():
+        with requests.get(f'{BASE_URL}/download?files={dataset}.zip', stream=True) as response:
+            with ZipFile(BytesIO(response.content)) as archive:
+                archive.extractall(DATA_ROOT_DIR)
+
+    # Convert relative to absolute path according the system
+    df = pd.read_csv(DATA_DIR / 'dataset.csv')
+    df['path'] = [str(DATA_DIR / path) for path in df['path']]
+    return df
+
+
 def fetch_barcelona_wbc(force_download: bool=False) -> None:
     """Fetch WBC dataset from Barcelona.
 
