@@ -1,0 +1,11 @@
+streamlit
+pathlib
+Pillow
+pandas
+requests
+numpy
+matplotlib
+tensorflow
+opencv-python
+seaborn
+-e git+https://github.com/corralien/yawbcc.git#egg=yawbcc
