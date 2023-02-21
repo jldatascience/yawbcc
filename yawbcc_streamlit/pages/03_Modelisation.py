@@ -13,7 +13,7 @@ def local_css(file_name):
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
 
-local_css("style.css")
+local_css("css/styles.css")
 
 model_list = ["VGG16", "ResNet50", "MobileNet", "Xception"]
 

@@ -13,7 +13,7 @@ def local_css(file_name):
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
 
-local_css("style.css")
+local_css("css/styles.css")
 
 title_1, title_2, title_3 = st.columns([1, 3, 1])
 with title_2:
