@@ -1,5 +1,4 @@
 # Y.A.W.B.C.C. : Yet Another White Blood Cells Classifier
-Classifier les cellules sanguines en fonction de leurs caractéristiques morphologiques en utilisant des techniques d’apprentissage profond (Deep Learning). Pour y parvenir, nous utiliserons un des réseaux neuronaux de convolution (CNN) avec une méthode d’apprentissage par transfert (Transfer Learning) ainsi qu’une optimisation des poids des modèles grâce à la méthode du Fine-tuning.
 
 Dans le cadre de la formation Data Scientist de [DataScientest](https://datascientest.com/), pour la promo Septembre 2022 Bootcamp, nous avons été sollicités pour réaliser un projet fil rouge. Nous avons décidé de choisir le projet YAWBCC, que nous avons le plaisir de vous présenter.
 
